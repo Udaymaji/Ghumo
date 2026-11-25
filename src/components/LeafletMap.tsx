@@ -106,7 +106,22 @@ export default function RealLeafletMap({
     gpsLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
+    const container = containerRef.current;
+    const resizeTimer = window.setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => {
+            map.invalidateSize();
+          })
+        : null;
+    observer?.observe(container);
+
     return () => {
+      window.clearTimeout(resizeTimer);
+      observer?.disconnect();
       if (
         watchIdRef.current !== null &&
         typeof navigator !== "undefined" &&
@@ -192,8 +207,10 @@ export default function RealLeafletMap({
       });
     }
 
-    if (boundsPoints.length > 0) {
+    if (boundsPoints.length > 1) {
       map.fitBounds(boundsPoints, { padding: [36, 36], maxZoom: 14 });
+    } else if (boundsPoints.length === 1) {
+      map.setView(boundsPoints[0], 13);
     } else {
       map.setView([trip.centerCoords.lat, trip.centerCoords.lng], 12);
     }

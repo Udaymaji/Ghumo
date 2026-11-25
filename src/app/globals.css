@@ -31,16 +31,6 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-.leaflet-pane,
-.leaflet-top,
-.leaflet-bottom {
-  z-index: 1 !important;
-}
-
-.leaflet-popup-pane {
-  z-index: 2 !important;
-}
-
 .leaflet-control-attribution {
   font-size: 10px !important;
 }
